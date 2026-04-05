@@ -1,0 +1,37 @@
+# ==================== BACKEND ====================
+# Maven build output
+backend/target/
+backend/.mvn/
+
+# Cloned git repos (JGit temp storage — never commit these)
+backend/git-repos/
+
+# Environment secrets — NEVER commit
+backend/.env
+
+# Logs
+*.log
+backend/backend_run.log
+backend/compile.log
+
+# ==================== FRONTEND ====================
+# Node modules
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/dist/
+
+# Env files
+frontend/.env
+frontend/.env.local
+frontend/.env.production
+
+# ==================== GENERAL ====================
+# IDE
+.vscode/settings.json
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
