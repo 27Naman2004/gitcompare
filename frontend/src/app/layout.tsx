@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { Navbar } from "@/components/Navbar";
 import { SiteTour } from "@/components/SiteTour";
+import { KeepAlive } from "@/components/KeepAlive";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body suppressHydrationWarning className={`${inter.variable} ${outfit.variable} font-sans antialiased text-foreground bg-background`}>
         <AuthProvider>
           <SiteTour />
+          <KeepAlive />
           <div className="relative min-h-screen flex flex-col">
             <Navbar />
             <main className="flex-1">

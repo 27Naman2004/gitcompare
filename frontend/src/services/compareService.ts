@@ -1,4 +1,7 @@
 import axios from 'axios';
+import { API_BASE_URL } from '@/utils/constants';
+
+const API_URL = `${API_BASE_URL}/compare`;
 
 /**
  * Retrieves authentication headers from localStorage.
@@ -12,8 +15,6 @@ const getAuthHeaders = () => {
     const user = JSON.parse(userStr);
     return { Authorization: `Bearer ${user.token}` };
 };
-
-const API_URL = 'http://localhost:8080/compare';
 
 export interface RepoSource {
   url: string;

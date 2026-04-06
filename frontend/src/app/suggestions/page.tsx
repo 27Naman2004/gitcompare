@@ -13,15 +13,16 @@ const CATEGORIES = [
   { id: 'workflow', label: 'Workflow', icon: GitMerge, color: 'orange' },
 ];
 
-// Static roadmap items (for project vision)
+import { API_BASE_URL } from '@/utils/constants';
+
 const STATIC_ROADMAP = [
   { title: 'GitHub Actions Integration', description: 'Trigger comparisons directly from CI/CD pipelines.', status: 'planned', icon: GitMerge },
   { title: 'AI Refactor Suggestions', description: 'Get AI-driven code refactoring recommendations per diff.', status: 'in-progress', icon: Sparkles },
   { title: 'Team Workspaces', description: 'Share comparison reports with your entire engineering team.', status: 'planned', icon: Shield },
   { title: 'Real-time Diff WebSocket', description: 'Live updates as repository changes happen.', status: 'research', icon: Zap },
+  { title: 'VS Code Extension', description: 'Bring GitCompare analysis directly into your editor.', status: 'planned', icon: Puzzle },
+  { title: 'Comparison Scheduling', description: 'Schedule automated comparisons and get email digests.', status: 'research', icon: BarChart3 },
 ];
-
-const API_BASE_URL = 'https://gitcompare.onrender.com';
 
 const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
   'planned': { label: 'Planned', color: 'bg-blue-500/10 text-blue-400 border-blue-500/20' },
