@@ -102,6 +102,26 @@ public class GitService {
                     .deletions(totalDeletions)
                     .fileDiffs(allFileDiffs)
                     .build();
+        } finally {
+            // Robustness: Cleanup the temporary repository clones from the ephemeral disk
+            cleanupStorage(basePath);
+        }
+    }
+
+    private void cleanupStorage(Path path) {
+        if (path == null) return;
+        try {
+            log.info("Cleaning up storage at {}", path);
+            Files.walk(path)
+                    .sorted((a, b) -> b.compareTo(a)) // Delete files first, then directories
+                    .map(Path::toFile)
+                    .forEach(file -> {
+                        if (!file.delete()) {
+                            log.warn("Failed to delete file: {}", file.getAbsolutePath());
+                        }
+                    });
+        } catch (IOException e) {
+            log.error("Failed to cleanup storage: {}", e.getMessage());
         }
     }
 

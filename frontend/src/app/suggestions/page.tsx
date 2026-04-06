@@ -13,19 +13,24 @@ const CATEGORIES = [
   { id: 'workflow', label: 'Workflow', icon: GitMerge, color: 'orange' },
 ];
 
-const ROADMAP = [
+// Static roadmap items (for project vision)
+const STATIC_ROADMAP = [
   { title: 'GitHub Actions Integration', description: 'Trigger comparisons directly from CI/CD pipelines.', status: 'planned', icon: GitMerge },
   { title: 'AI Refactor Suggestions', description: 'Get AI-driven code refactoring recommendations per diff.', status: 'in-progress', icon: Sparkles },
   { title: 'Team Workspaces', description: 'Share comparison reports with your entire engineering team.', status: 'planned', icon: Shield },
   { title: 'Real-time Diff WebSocket', description: 'Live updates as repository changes happen.', status: 'research', icon: Zap },
-  { title: 'VS Code Extension', description: 'Bring GitCompare analysis directly into your editor.', status: 'planned', icon: Puzzle },
-  { title: 'Comparison Scheduling', description: 'Schedule automated comparisons and get email digests.', status: 'research', icon: BarChart3 },
 ];
+
+const API_BASE_URL = 'https://gitcompare.onrender.com';
 
 const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
   'planned': { label: 'Planned', color: 'bg-blue-500/10 text-blue-400 border-blue-500/20' },
+  'PLANNED': { label: 'Planned', color: 'bg-blue-500/10 text-blue-400 border-blue-500/20' },
   'in-progress': { label: 'In Progress', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' },
+  'IN_PROGRESS': { label: 'In Progress', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' },
   'research': { label: 'Research', color: 'bg-violet-500/10 text-violet-400 border-violet-500/20' },
+  'RESEARCH': { label: 'Research', color: 'bg-violet-500/10 text-violet-400 border-violet-500/20' },
+  'SHIPPED': { label: 'Shipped', color: 'bg-amber-500/10 text-amber-400 border-amber-500/20' },
 };
 
 export default function SuggestionsPage() {
@@ -35,13 +40,25 @@ export default function SuggestionsPage() {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [dynamicRoadmap, setDynamicRoadmap] = useState<any[]>([]);
+
+  React.useEffect(() => {
+    fetch(`${API_BASE_URL}/api/public/roadmap`)
+      .then(res => res.json())
+      .then(data => {
+        // Flatten the grouped map into an array
+        const items = Object.values(data).flat();
+        setDynamicRoadmap(items as any[]);
+      })
+      .catch(err => console.error('Failed to fetch roadmap:', err));
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !description.trim()) return;
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:8080/api/public/suggestions', {
+      const res = await fetch(`${API_BASE_URL}/api/public/suggestions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ category, title, description, email }),
@@ -208,7 +225,12 @@ export default function SuggestionsPage() {
             </div>
             
             <div className="space-y-4">
-              {ROADMAP.map((item, i) => (
+              {[...STATIC_ROADMAP, ...dynamicRoadmap.map(item => ({
+                title: item.title,
+                description: item.description,
+                status: item.status,
+                icon: Lightbulb
+              }))].map((item, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, y: 20 }}
@@ -222,8 +244,8 @@ export default function SuggestionsPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 mb-1 flex-wrap">
                       <h3 className="font-black text-sm tracking-tight">{item.title}</h3>
-                      <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border ${STATUS_CONFIG[item.status].color}`}>
-                        {STATUS_CONFIG[item.status].label}
+                      <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border ${STATUS_CONFIG[item.status]?.color || 'border-border'}`}>
+                        {STATUS_CONFIG[item.status]?.label || item.status}
                       </span>
                     </div>
                     <p className="text-xs text-muted-foreground font-medium leading-relaxed">{item.description}</p>

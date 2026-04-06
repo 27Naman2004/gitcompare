@@ -31,13 +31,13 @@ public class SuggestionController {
             return ResponseEntity.badRequest().body(Map.of("error", "Title and description are required."));
         }
 
-        // Save to MongoDB
         Suggestion suggestion = Suggestion.builder()
                 .category(category)
                 .title(title)
                 .description(desc)
                 .email(email.isEmpty() ? null : email)
                 .submittedAt(LocalDateTime.now())
+                .status("PENDING") // Explicitly set to pending
                 .build();
         suggestionRepository.save(suggestion);
         log.info("New suggestion saved: [{}] {}", category, title);

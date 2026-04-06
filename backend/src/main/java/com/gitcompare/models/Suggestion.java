@@ -23,4 +23,7 @@ public class Suggestion {
     private String description;
     private String email;
     private LocalDateTime submittedAt;
+    
+    @Builder.Default
+    private String status = "PENDING"; // PENDING, IN_PROGRESS, SHIPPED, REJECTED
 }
